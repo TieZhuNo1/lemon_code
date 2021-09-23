@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<table border="" cellspacing="" cellpadding="">
+				<tr>
+					<th>ID</th>
+					<th>接口名</th>
+					<th>测试人员</th>
+					<th>项目名</th>
+					<th>项目ID</th>
+					<th>描述信息</th>
+					<th>创建时间</th>
+					<th>用例数</th>
+					<th>操作</th>
+				</tr>
+				<tr :key='item.id' v-for="item in lists">
+					<td>{{item.id}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.tester}}</td>
+					<td>{{item.project}}</td>
+					<td>{{item.project_id}}</td>
+					<td>{{item.desc}}</td>
+					<td>{{item.create_time}}</td>
+					<td>{{item.testcases}}</td>
+					<td><button @click="handleDel(item.id)">删除</button></td>
+				</tr>
+			</table>
+			<hr>
+			<form action="" method="">
+				ID:<input type="text" v-model="addData.id" /><br>
+				接口名:<input type="text" v-model="addData.name" /><br>
+				测试人员:<input type="text" v-model="addData.tester" /><br>
+				项目名:<input type="text" v-model="addData.project" /><br>
+				项目ID:<input type="text" v-model="addData.project_id" /><br>
+				描述信息:<input type="text" v-model="addData.desc" /><br>
+				创建时间:<input type="text" v-model="addData.create_time" /><br>
+				用例数:<input type="text" v-model="addData.testcases" /><br>
+				<button type="button" @click="submitdata" v-show="buttonStatu">新增</button>
+			</form>
+
+
+		</div>
+		<script type="text/javascript">
+			var vue = new Vue({
+				el: '#app',
+				data: {
+					lists: [{
+							"id": 1,
+							"name": "登录接口_自动化测试平台项目",
+							"tester": "可优",
+							"project": "自动化测试平台项目",
+							"project_id": 1,
+							"desc": "登录接口",
+							"create_time": "2019-11-06 14:50:30",
+							"testcases": 9,
+						},
+						{
+							"id": 2,
+							"name": "注册接口_自动化测试平台项目",
+							"tester": "可可",
+							"project": "自动化测试平台项目",
+							"project_id": 1,
+							"desc": "自动化测试平台项目, 注册接口",
+							"create_time": "2019-11-06 14:51:00",
+							"testcases": 0,
+						},
+						{
+							"id": 3,
+							"name": "创建项目接口_自动化测试平台项目",
+							"tester": "可优",
+							"project": "自动化测试平台项目",
+							"project_id": 1,
+							"desc": "这是自动化测试平台创建项目接口",
+							"create_time": "2019-11-06 14:51:45",
+							"testcases": 1,
+						},
+						{
+							"id": 4,
+							"name": "注册接口_前程贷P2P金融项目",
+							"tester": "小可可",
+							"project": "前程贷P2P金融项目",
+							"project_id": 2,
+							"desc": "",
+							"create_time": "2019-11-06 14:52:22",
+							"testcases": 0,
+						},
+						{
+							"id": 5,
+							"name": "登录接口_前程贷P2P金融项目",
+							"tester": "柠檬小姐姐",
+							"project": "前程贷P2P金融项目",
+							"project_id": 2,
+							"desc": "",
+							"create_time": "2019-11-06 14:52:40",
+							"testcases": 0,
+						},
+						{
+							"id": 6,
+							"name": "查看项目列表接口_前程贷P2P金融项目",
+							"tester": "柠檬小姐姐",
+							"project": "前程贷P2P金融项目",
+							"project_id": 2,
+							"desc": "",
+							"create_time": "2019-11-06 17:22:50",
+							"testcases": 1,
+						}
+					],
+					addData: {
+						"id": null,
+						"name": null,
+						"tester": null,
+						"project": null,
+						"project_id": null,
+						"desc": null,
+						"create_time": null,
+						"testcases": null,
+					},
+					buttonStatu: true,
+				},
+				methods: {
+					handleDel(id) {
+						//点击删除按钮触发的方法
+						console.log('点击了删除按钮,删除id的值', id)
+						let index_ = this.lists.findIndex(function(value) {
+							return value.id === id
+						})
+						console.log(index_)
+						//根据索引值，删除数组中的数据
+						this.lists.splice(index_, 1)
+					},
+					submitdata() {
+						this.lists.push(this.addData)
+					}
+				},
+				watch: {
+					'addData.id': function(value, oldvalue) {
+						var _this = this;
+						console.log(value)
+						console.log(oldvalue)
+						//ID为空时重新显示新增按钮
+						if (value == '') {
+							_this.buttonStatu = true
+						}
+						//ID存在时隐藏按钮
+						this.lists.forEach(function(item) {
+							console.log(item.id)
+							if (item.id == value) {
+								console.log('执行')
+								_this.buttonStatu = false
+								alert('该ID已存在！')
+							}
+						})
+						console.log(this.buttonStatu)
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
