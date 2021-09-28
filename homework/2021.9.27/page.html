@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<div v-if="projects.length > 0">
+				<table border="" cellspacing="" cellpadding="">
+					<tr>
+						<th>desc</th>
+						<th>id</th>
+						<th>leader</th>
+						<th>name</th>
+					</tr>
+					<tr :key='item.id' v-for="item in projects">
+						<td>{{item.desc}}</td>
+						<td>{{item.id}}</td>
+						<td>{{item.leader}}</td>
+						<td>{{item.name}}</td>
+					</tr>
+				</table>
+			</div>
+			账号:<input type="text" v-model="user.username" /><br>
+			密码:<input type="password" v-model="user.password" /> <br>
+			<input type="button" @click="login()" value="登录" />
+			<!-- <input type="button" @click="getprojects()" value="获取数据" /> -->
+		</div>
+		<script type="text/javascript">
+			const request = axios.create({
+				baseURL: 'http://47.112.233.130:8888/'
+			})
+			var vm = new Vue({
+				el: "#app",
+				data: {
+					user: {
+						username: '',
+						password: ''
+					},
+					projects: []
+				},
+				methods: {
+					getprojects() {
+						_gthis = this
+						request.get('/projects/', {
+							headers: {
+								Authorization: 'Bearer ' + window.localStorage.getItem('token')
+							}
+						}).then(function(response) {
+							console.log('请求成功', response)
+							// console.log(response.data.results)
+							_gthis.projects = response.data.results
+						}).catch(function(error) {
+							console.log('请求失败', error.response)
+						})
+					},
+					login() {
+						_this = this
+						request.post('/users/login/', {
+							username: this.user.username,
+							password: this.user.password
+						}).then(function(response) {
+							console.log('请求成功', response)
+							let token = response.data.token
+							window.localStorage.setItem('token', token)
+							_this.getprojects()
+						}).catch(function(error) {
+							console.log('请求失败', error.response)
+						})
+					},
+
+				}
+
+			})
+		</script>
+	</body>
+</html>
