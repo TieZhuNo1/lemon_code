@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	</head>
+	<style type="text/css">
+		.login {
+			width: 600px;
+			height: 400px;
+			box-shadow: 0 0 15px black;
+			margin: 150px auto;
+			border-radius: 5px;
+			text-align: center;
+		}
+
+		.title {
+			color: #00aaff;
+			font: bold 24px/30px "microsoft sans serif";
+			padding: 50px 0;
+		}
+
+		.login input {
+			width: 70%;
+			height: 35px;
+			margin-bottom: 30px;
+			border-radius: 3px;
+			border: solid 1px #d1d1d1;
+		}
+
+		.login input:focus {
+			outline: none;
+			border: solid 1px #d1d1d1;
+		}
+
+		.login input[type='submit'] {
+			background: #00AAFF;
+			color: #fff;
+			border: 0;
+			box-sizing: content-box;
+		}
+
+		.el-header {
+			background: #00aa7f;
+		}
+
+		.el-aside {
+			background: #00aaff;
+			height: 900px;
+		}
+	</style>
+	<body>
+		<div id="app">
+			<router-view></router-view>
+		</div>
+		<script type="text/javascript">
+			const requestA = axios.create({
+				baseURL: 'http://47.112.233.130:8888/'
+			})
+			const Login = {
+				template: `
+				<div class="login">
+					<div class="title">接 口 自 动 化 平 台</div>
+					<form action="">
+						<input type="text" v-model="loginForm.username" autocomplete="off" placeholder="   请输入账号" /><br>
+						<input type="password" v-model="loginForm.password" placeholder="   请输入密码" /><br>
+						<input type="button" @click="login" value="登录" />
+					</form>
+				</div>
+				`,
+				data() {
+					return {
+						loginForm: {
+							username: "",
+							password: ""
+						}
+					}
+				},
+				methods: {
+					login() {
+						requestA.post('/users/login/', this.loginForm).then((response) => {
+							console.log('请求成功', response)
+							//提取token
+							let token = response.data.token
+							//保存token到localStroge
+							window.localStorage.setItem('token', token)
+							// 跳转到首页
+							this.$router.push('/index')
+						}).catch(
+							function(error) {
+								console.log('请求失败', error.response)
+							}
+						)
+					}
+				}
+			}
+			const Index = {
+				template: `
+				<el-container>
+				  <el-header >
+					  <router-link to="/index/project">项目管理</router-link>
+					  <router-link to="/index/inter">接口管理</router-link>
+					  <router-link to="/index/cases">用例管理</router-link>
+				  </el-header>
+				  <el-container>
+				    <el-aside width="200px">
+					</el-aside>
+				    <el-main>
+						<router-view></router-view>
+					</el-main>
+				  </el-container>
+				</el-container>				
+				`
+			}
+			const Project = {
+				template: `
+				<div>
+				<h1>项目管理</h1>
+				</div>
+				`
+			}
+			const Inter = {
+				template: `
+				<div>
+				<h1>接口管理</h1>
+				</div>
+				`
+			}
+			const Cases = {
+				template: `
+				<div>
+				<h1>用例管理</h1>
+				</div>
+				`
+			}
+			const routes = [{
+					path: '/login',
+					component: Login
+				},
+				{
+					path: '/index',
+					component: Index,
+					children: [{
+						path: 'project',
+						component: Project
+					},
+					{
+						path: 'inter',
+						component: Inter
+					},
+					{
+						path: 'cases',
+						component: Cases
+					}]
+				},
+				{
+					path: '/',
+					redirect: '/login'
+				}
+			]
+			var router = new VueRouter({
+				routes: routes
+			})
+			var vm = new Vue({
+				el: '#app',
+				router: router
+			})
+		</script>
+	</body>
+</html>

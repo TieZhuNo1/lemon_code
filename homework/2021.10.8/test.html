@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div class="login">
+			<div class="title">接 口 自 动 化 平 台</div>
+			<form action="">
+				<input type="text" v-model="loginForm.username" autocomplete="off" placeholder="   请输入账号" /><br>
+				<input type="password" v-model="loginForm.password" placeholder="   请输入密码" /><br>
+				<input type="button" @click="login" value="登录" />
+			</form>
+		</div>
+	</body>
+</html>
