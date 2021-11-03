@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import reverse
+from django.utils import timezone
 
 
 # Create your views here.
@@ -11,7 +12,11 @@ def index(request):
     首页面视图
     """
 
-    return HttpResponse("接口自动化平台")
+    # return HttpResponse("接口自动化平台")
+    now = timezone.now()
+    return render(request, 'projects/index.html',context={
+        'now':now
+    })
 
 
 def detail(request, pid):
